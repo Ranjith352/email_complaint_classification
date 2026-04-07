@@ -1,28 +1,45 @@
-from transformers import pipeline
+# =====================================================
+# SAFE IMPORTS (IMPORTANT FOR DEPLOYMENT)
+# =====================================================
+
+AI_ENABLED = True
+
+try:
+    from transformers import pipeline
+except:
+    AI_ENABLED = False
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+
 # =====================================================
-# LOAD MODELS
+# LOAD MODELS (ONLY IF AVAILABLE)
 # =====================================================
 
-# Zero-shot classification
-classifier = pipeline(
-    "zero-shot-classification",
-    model="facebook/bart-large-mnli"
-)
+if AI_ENABLED:
+    try:
+        # Zero-shot classification
+        classifier = pipeline(
+            "zero-shot-classification",
+            model="facebook/bart-large-mnli"
+        )
 
-# Sentiment
-sentiment_analyzer = pipeline(
-    "sentiment-analysis",
-    model="distilbert-base-uncased-finetuned-sst-2-english"
-)
+        # Sentiment
+        sentiment_analyzer = pipeline(
+            "sentiment-analysis",
+            model="distilbert-base-uncased-finetuned-sst-2-english"
+        )
 
-# Use text-generation instead of summarization
-generator = pipeline(
-    "text-generation",
-    model="facebook/bart-large-cnn"
-)
+        # Text generation
+        generator = pipeline(
+            "text-generation",
+            model="facebook/bart-large-cnn"
+        )
+
+    except:
+        AI_ENABLED = False
+
 
 # =====================================================
 # LABELS
@@ -38,41 +55,57 @@ CATEGORY_LABELS = [
     "General inquiry"
 ]
 
+
 # =====================================================
 # FUNCTIONS
 # =====================================================
 
 def predict_urgency(text):
-    result = classifier(text[:1024], URGENCY_LABELS)
+    if AI_ENABLED:
+        result = classifier(text[:1024], URGENCY_LABELS)
 
-    label = result["labels"][0]
-    score = float(result["scores"][0])
+        label = result["labels"][0]
+        score = float(result["scores"][0])
 
-    if "High" in label:
-        urgency = "High"
-    elif "Medium" in label:
-        urgency = "Medium"
-    else:
-        urgency = "Low"
+        if "High" in label:
+            urgency = "High"
+        elif "Medium" in label:
+            urgency = "Medium"
+        else:
+            urgency = "Low"
 
-    return urgency, score
+        return urgency, score
+
+    # 🔥 Fallback (when AI disabled)
+    return "Medium", 0.5
 
 
 def predict_category(text):
-    result = classifier(text[:1024], CATEGORY_LABELS)
+    if AI_ENABLED:
+        result = classifier(text[:1024], CATEGORY_LABELS)
 
-    category = result["labels"][0]
-    score = float(result["scores"][0])
+        category = result["labels"][0]
+        score = float(result["scores"][0])
 
-    return category, score
+        return category, score
+
+    # 🔥 Fallback
+    return "General inquiry", 0.5
 
 
 def predict_sentiment(text):
-    result = sentiment_analyzer(text[:512])[0]
-    return result["label"], float(result["score"])
+    if AI_ENABLED:
+        result = sentiment_analyzer(text[:512])[0]
+        return result["label"], float(result["score"])
+
+    # 🔥 Fallback
+    return "NEUTRAL", 0.5
 
 
 def generate_summary(text):
+    if not AI_ENABLED:
+        return text[:150]  # simple fallback summary
+
     if len(text.split()) < 30:
         return text
 
