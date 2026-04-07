@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ department }} Department{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+<h3>{{ department }} Complaint Queue</h3>
+
+<table class="complaint-table">
+
+<thead>
+<tr>
+<th>Title</th>
+<th>Sender</th>
+<th>Urgency</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for c in complaints %}
+
+<tr>
+
+<td>{{ c.title }}</td>
+<td>{{ c.sender }}</td>
+
+<td>
+{% if c.urgency == "High" %}
+<span class="badge-high">High</span>
+{% elif c.urgency == "Medium" %}
+<span class="badge-medium">Medium</span>
+{% else %}
+<span class="badge-low">Low</span>
+{% endif %}
+</td>
+
+<td>
+{% if c.status == "Resolved" %}
+<span class="status-resolved">Resolved</span>
+{% else %}
+<span class="status-open">Open</span>
+{% endif %}
+</td>
+
+<td>
+{% if c.status == "Open" %}
+<a href="/resolve/{{c.id}}" class="resolve-btn">Resolve</a>
+{% else %}
+Resolved
+{% endif %}
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

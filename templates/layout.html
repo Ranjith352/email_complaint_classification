@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>AI Complaint Intelligence</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script>
+
+function toggleDarkMode(){
+
+    const body = document.body;
+
+    if(body.classList.contains("dark-mode")){
+        body.classList.remove("dark-mode");
+        body.classList.add("light-mode");
+        localStorage.setItem("theme","light");
+    }else{
+        body.classList.remove("light-mode");
+        body.classList.add("dark-mode");
+        localStorage.setItem("theme","dark");
+    }
+}
+
+window.onload = function(){
+
+    const theme = localStorage.getItem("theme");
+
+    if(theme === "light"){
+        document.body.classList.add("light-mode");
+    }else{
+        document.body.classList.add("dark-mode");
+    }
+}
+
+</script>
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <h2 class="logo">AI Console</h2>
+
+        <a href="/" class="nav-link">📊 Dashboard</a>
+        <a href="/complaints" class="nav-link">📨 Complaints</a>
+        <a href="/analytics" class="nav-link">📈 Analytics</a>
+
+        <!-- Divider -->
+        <div class="nav-divider"></div>
+
+        <!-- Departments -->
+        <p class="nav-section">Departments</p>
+
+        <a href="/department/it" class="nav-link">🖥 IT Dept</a>
+        <a href="/department/finance" class="nav-link">💰 Finance</a>
+        <a href="/department/security" class="nav-link">🔒 Security</a>
+        <a href="/department/admin" class="nav-link">🏢 Admin</a>
+
+    </div>
+
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+
+            <h1 class="page-title">
+                {% block title %}{% endblock %}
+            </h1>
+
+            <button onclick="toggleDarkMode()" class="theme-btn">
+                🌙
+            </button>
+
+        </div>
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block title %}Executive Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- KPI CARDS -->
+<div class="kpi-grid">
+
+<div class="card kpi-card">
+<h3>Total Complaints</h3>
+<p class="kpi-value">{{ total }}</p>
+</div>
+
+<div class="card kpi-card">
+<h3>High Urgency %</h3>
+<p class="kpi-value">{{ high_percentage }}%</p>
+</div>
+
+<div class="card kpi-card">
+<h3>Resolution Rate</h3>
+<p class="kpi-value">{{ resolution_rate }}%</p>
+</div>
+
+<div class="card kpi-card">
+<h3>Risk Level</h3>
+<p class="kpi-value risk-warning">{{ risk_level }}</p>
+</div>
+
+</div>
+
+
+<!-- AI ALERT BANNER -->
+<div class="ai-alert">
+⚠ AI ALERT: {{ high }} high‑priority complaints detected in the last 24 hours.
+</div>
+
+
+<!-- AI OPERATIONAL INTELLIGENCE -->
+<div class="card intelligence-panel">
+
+<h3 class="intel-title">AI Operational Intelligence</h3>
+
+<div class="intel-grid">
+
+<!-- TOP ISSUE -->
+<div class="intel-box">
+<div class="intel-icon">📊</div>
+
+<div class="intel-content">
+<span>Top Issue Detected</span>
+<p>{{ top_category }}</p>
+</div>
+
+</div>
+
+
+<!-- HIGH URGENCY -->
+<div class="intel-box">
+<div class="intel-icon">🔥</div>
+
+<div class="intel-content">
+<span>High Urgency Complaints</span>
+<p>{{ high }}</p>
+</div>
+
+</div>
+
+
+<!-- SYSTEM RISK -->
+<div class="intel-box">
+<div class="intel-icon risk-icon">⚠</div>
+
+<div class="intel-content">
+<span>System Risk Assessment</span>
+<p class="risk-warning">{{ risk_level }}</p>
+</div>
+</div>
+
+
+<!-- AI ACTION -->
+<div class="intel-box">
+<div class="intel-icon">🧠</div>
+
+<div class="intel-content">
+<span>AI Suggested Action</span>
+<p>
+Investigate recurring complaints related to {{ top_category }}.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

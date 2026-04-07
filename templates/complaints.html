@@ -1,0 +1,144 @@
+{% extends "layout.html" %}
+
+{% block title %}Complaint Management{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+<h3>Complaint Queue</h3>
+
+<form method="get" class="search-bar">
+
+<input
+type="text"
+name="search"
+placeholder="Search complaints..."
+value="{{search}}"
+>
+
+<select name="urgency">
+<option value="">All Urgency</option>
+<option value="High">High</option>
+<option value="Medium">Medium</option>
+<option value="Low">Low</option>
+</select>
+
+<select name="category">
+<option value="">All Categories</option>
+<option value="Technical">Technical</option>
+<option value="Security">Security</option>
+<option value="Billing">Billing</option>
+<option value="Academic">Academic</option>
+<option value="General">General</option>
+</select>
+
+<button type="submit">Filter</button>
+
+</form>
+
+</div>
+
+
+
+<div class="card">
+
+<table class="complaint-table">
+
+<thead>
+
+<tr>
+<th>Title</th>
+<th>Sender</th>
+<th>Category</th>
+<th>Department</th>
+<th>Urgency</th>
+<th>Sentiment</th>
+<th>AI Summary</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for c in complaints %}
+
+<tr>
+
+<td>{{ c.title }}</td>
+
+<td>{{ c.sender }}</td>
+
+<td>{{ c.category }}</td>
+
+<td>{{ c.department }}</td>
+
+<td>
+
+{% if c.urgency == "High" %}
+<span class="badge-high">High</span>
+
+{% elif c.urgency == "Medium" %}
+<span class="badge-medium">Medium</span>
+
+{% else %}
+<span class="badge-low">Low</span>
+{% endif %}
+
+</td>
+
+<td>
+
+{% if c.sentiment == "NEGATIVE" %}
+<span style="color:#ff4d4d;font-weight:bold;">Negative</span>
+
+{% else %}
+<span style="color:#4caf50;font-weight:bold;">Positive</span>
+{% endif %}
+
+</td>
+
+<td style="max-width:260px;color:#cbd5e1;">{{ c.summary }}</td>
+
+<td>
+
+{% if c.status == "Resolved" %}
+<span class="status-resolved">Resolved</span>
+
+{% else %}
+<span class="status-open">Open</span>
+{% endif %}
+
+</td>
+
+<td>
+
+{% if c.status == "Open" %}
+
+<a href="/resolve/{{c.id}}" class="resolve-btn">
+Resolve
+</a>
+
+{% else %}
+
+<span style="color:#4caf50;font-weight:bold;">
+Resolved
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}
